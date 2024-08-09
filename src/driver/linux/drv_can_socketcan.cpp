@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <iostream>
 
 #include <net/if.h>
 #include <sys/ioctl.h>
@@ -80,11 +79,11 @@ const CO_IF_CAN_DRV Linux_Socketcan_CanDriver = {
 
 static void DrvCanInit(void)
 {
-    std::cout << __func__ << std::endl;
+    printf("%s\n", __func__);
 
     CanSocket = socket(PF_CAN, SOCK_RAW, CAN_RAW);
     if (CanSocket < 0) {
-        std::cout << "Creating CAN socket failed" << std::endl;
+        printf("Creating CAN socket failed\n");
         while (1){} 
     }
 
@@ -92,13 +91,13 @@ static void DrvCanInit(void)
     addr.can_family = AF_CAN;
     addr.can_ifindex = if_nametoindex(CanInterfaceName);
     if (addr.can_ifindex == 0) {
-        std::cout << "Invalid Parameter, can interface name unknown (" << CanInterfaceName << ")" << std::endl;
+        printf("Invalid Parameter, can interface name unknown (%s)\n",CanInterfaceName);
         while (1){} 
     }
 
     int fd = bind(CanSocket, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr));
     if (fd < 0) {
-        std::cout << "Open CAN socket " << CanInterfaceName  << " failed" << std::endl;
+        printf("Open CAN socket %s failed\n", CanInterfaceName);
         while (1){} 
     }
 
@@ -112,12 +111,12 @@ static void DrvCanInit(void)
     setsockopt(CanSocket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<char *>(&tvTx),
              sizeof tvTx);
 
-    std::cout << "CAN socket initialization success" << std::endl;
+    printf("CAN socket initialization success\n");
 }
 
 static void DrvCanEnable(uint32_t baudrate)
 {
-    std::cout << __func__ << std::endl;
+    printf("%s\n", __func__);
 
     /* Currently CAN socket needs to be enabled beforehand via command line
 
@@ -139,7 +138,7 @@ static int16_t DrvCanSend(CO_IF_FRM *frm)
     }
     int16_t bytesWritten = write(CanSocket, &frame, sizeof(frame));
     if (bytesWritten < 0) {
-        std::cout << "DrvCanSend failed" << std::endl;
+        printf("DrvCanSend failed\n");
         return 0;
     }
     return sizeof(CO_IF_FRM);
@@ -166,7 +165,7 @@ static int16_t DrvCanRead (CO_IF_FRM *frm)
 
 static void DrvCanReset(void)
 {
-    std::cout << __func__ << std::endl;
+    printf("%s\n", __func__);
 
     DrvCanClose();
     DrvCanInit();
@@ -174,7 +173,7 @@ static void DrvCanReset(void)
 
 static void DrvCanClose(void)
 {
-    std::cout << __func__ << std::endl;
+    printf("%s\n", __func__);
 
     close(CanSocket);
 }

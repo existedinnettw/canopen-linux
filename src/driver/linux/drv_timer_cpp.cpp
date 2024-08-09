@@ -15,50 +15,57 @@
 ******************************************************************************/
 
 /******************************************************************************
-* INCLUDES
-******************************************************************************/
+ * INCLUDES
+ ******************************************************************************/
 
 #include "drv_timer_cpp.h"
 
 #include "hw.h"
 #include "app.h"
 
-#include <iostream>
+#include <stdio.h>
 #include <thread>
 #include <atomic>
 #include <mutex>
 
 /******************************************************************************
-* PRIVATE VARIABLES
-******************************************************************************/
+ * PRIVATE VARIABLES
+ ******************************************************************************/
 
-class TimerCountdown {
+class TimerCountdown
+{
 public:
-    TimerCountdown() : timerThread_(&TimerCountdown::CountdownThread, this) {
-
+    TimerCountdown() : timerThread_(&TimerCountdown::CountdownThread, this)
+    {
     }
 
-    ~TimerCountdown() {
+    ~TimerCountdown()
+    {
         Stop();
     }
 
-    void Reset() {
+    void Reset()
+    {
         std::lock_guard<std::mutex> lock(mutex_);
         count_ = 0;
     }
 
-    void Reload(uint32_t reload) {
+    void Reload(uint32_t reload)
+    {
         std::lock_guard<std::mutex> lock(mutex_);
         count_ = reload;
     }
 
-    uint32_t GetCount() {
+    uint32_t GetCount()
+    {
         std::lock_guard<std::mutex> lock(mutex_);
         return count_;
     }
 
-    void Stop() {
-        if (timerThread_.joinable()) {
+    void Stop()
+    {
+        if (timerThread_.joinable())
+        {
             endThread_ = true;
             timerThread_.join();
         }
@@ -70,18 +77,23 @@ private:
     std::mutex mutex_;
     uint32_t count_;
 
-    void CountdownThread() {
-        while (!endThread_) {
-            if (Countdown()) {
+    void CountdownThread()
+    {
+        while (!endThread_)
+        {
+            if (Countdown())
+            {
                 COTmrService(&Node.Tmr);
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(20));
         }
     }
 
-    bool Countdown() {
+    bool Countdown()
+    {
         std::lock_guard<std::mutex> lock(mutex_);
-        if (count_ > 0) {
+        if (count_ > 0)
+        {
             count_--;
             return true;
         }
@@ -92,19 +104,19 @@ private:
 TimerCountdown Timer;
 
 /******************************************************************************
-* PRIVATE FUNCTIONS
-******************************************************************************/
+ * PRIVATE FUNCTIONS
+ ******************************************************************************/
 
-static void     DrvTimerInit   (uint32_t freq);
-static void     DrvTimerStart  (void);
-static uint8_t  DrvTimerUpdate (void);
-static uint32_t DrvTimerDelay  (void);
-static void     DrvTimerReload (uint32_t reload);
-static void     DrvTimerStop   (void);
+static void DrvTimerInit(uint32_t freq);
+static void DrvTimerStart(void);
+static uint8_t DrvTimerUpdate(void);
+static uint32_t DrvTimerDelay(void);
+static void DrvTimerReload(uint32_t reload);
+static void DrvTimerStop(void);
 
 /******************************************************************************
-* PUBLIC VARIABLE
-******************************************************************************/
+ * PUBLIC VARIABLE
+ ******************************************************************************/
 
 const CO_IF_TIMER_DRV Linux_Cpp_TimerDriver = {
     DrvTimerInit,
@@ -112,20 +124,19 @@ const CO_IF_TIMER_DRV Linux_Cpp_TimerDriver = {
     DrvTimerDelay,
     DrvTimerStop,
     DrvTimerStart,
-    DrvTimerUpdate
-};
+    DrvTimerUpdate};
 
 /******************************************************************************
-* PUBLIC FUNCTIONS
-******************************************************************************/
+ * PUBLIC FUNCTIONS
+ ******************************************************************************/
 
 /******************************************************************************
-* PRIVATE FUNCTIONS
-******************************************************************************/
+ * PRIVATE FUNCTIONS
+ ******************************************************************************/
 
 static void DrvTimerInit(uint32_t freq)
 {
-    std::cout << __func__ << std::endl;
+    printf("%s\n", __func__);
     Timer.Reset();
 }
 
