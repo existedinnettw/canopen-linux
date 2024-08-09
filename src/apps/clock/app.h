@@ -37,6 +37,7 @@ extern CO_NODE Node;
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
+void AppClock(void *p_arg);
 void AppStart(void);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */

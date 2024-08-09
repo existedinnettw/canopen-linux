@@ -32,7 +32,7 @@ CO_NODE Node;
 ******************************************************************************/
 
 /* timer callback function */
-static void AppClock(void *p_arg)
+void AppClock(void *p_arg)
 {
     CO_NODE  *node;
     CO_OBJ   *od_sec;

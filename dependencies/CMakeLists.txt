@@ -19,6 +19,6 @@
 #
 CPMAddPackage(
   NAME    canopen-stack
-  URL     https://github.com/embedded-office/canopen-stack/archive/refs/heads/develop.zip
+  URL     https://github.com/existedinnettw/canopen-stack/archive/95ed4c370407b1a36f9cb72cbf77d602f68881e3.zip
   #VERSION ${CO_VERSION}
 )

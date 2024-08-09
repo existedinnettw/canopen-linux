@@ -28,7 +28,7 @@
  * selections, see the directory /drivers.
  */
 struct CO_IF_DRV_T AppDriver = {
-    &Linux_Socketcan_CanDriver,
+    0, //init later
     &Linux_Cpp_TimerDriver,
     &Linux_File_NvmDriver
 };
